@@ -1,0 +1,28 @@
+Position of rightmost set bit 
+    n & (~(n-1))
+
+Invert bits from leftmost set bit
+    n-1
+
+Flip leftmost set bit
+    n & (n-1)
+
+Checking power of 2
+    !(n & (n-1))
+
+Position of MSB
+    floor(log(n)/log(2)) + 1
+
+Mask for kth bit from left
+    1 << k
+
+Checking kth bit set or not
+    n & (1 << k) 
+
+Mask from l to r [0 based lr]
+
+    maskLength = (1ll << (r - l + 1)) - 1;
+    mask = maskLength << l;
+
+    //extract bits of n
+    mask & n;
