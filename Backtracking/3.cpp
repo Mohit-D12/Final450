@@ -1,127 +1,101 @@
-// Printing all solutions in N-Queen Problem
-// https://www.geeksforgeeks.org/printing-solutions-n-queen-problem/
+// Word Break - Part 2
+// https://practice.geeksforgeeks.org/problems/word-break-part-23249/1#
 
 // CPP program for above approach
 #include <bits/stdc++.h>
 
 using namespace std;
 
-vector<vector<int> > result;
-// Program to solve N Queens problem
-void solveBoard(vector<vector<char> >& board, int row,
-                int rowmask, int ldmask, int rdmask,
-                int& ways)
+class Solution1
 {
-
-    int n = board.size();
-
-    // All_rows_filled is a bit mask having all N bits set
-    int all_rows_filled = (1 << n) - 1;
-
-    // If rowmask will have all bits set, means queen has
-    // been placed successfully in all rows and board is
-    // displayed
-    if (rowmask == all_rows_filled) {
-
-        vector<int> v;
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board.size(); j++) {
-                if (board[i][j] == 'Q')
-                    v.push_back(j + 1);
+    void backtrack(vector<string>& dict, string& s, int n, int index, string sentence, vector<string>& ans)
+    {
+        if(index >= n)
+        {
+            ans.push_back(sentence);
+            return;
+        }
+        
+        
+        string current_word = "";
+        
+        for(int i = index; i < n; i++)
+        {
+            current_word.push_back(s[i]);
+            if(find(dict.begin(), dict.end(), current_word) != dict.end()) 
+            {
+                if(sentence.length())
+                    backtrack(dict, s, n, i+1, sentence+" "+current_word, ans);
+                else
+                    backtrack(dict, s, n, i+1, current_word, ans);
             }
         }
-        result.push_back(v);
-        return;
     }
-
-    // We extract a bit mask(safe) by rowmask,
-    // ldmask and rdmask. all set bits of 'safe'
-    // indicates the safe column index for queen
-    // placement of this iteration for row index(row).
-    int safe
-        = all_rows_filled & (~(rowmask | ldmask | rdmask));
-    while (safe) {
-
-        // Extracts the right-most set bit
-        // (safe column index) where queen
-        // can be placed for this row
-        int p = safe & (-safe);
-        int col = (int)log2(p);
-        board[row][col] = 'Q';
-
-        // This is very important:
-        // we need to update rowmask, ldmask and rdmask
-        // for next row as safe index for queen placement
-        // will be decided by these three bit masks.
-
-        // We have all three rowmask, ldmask and
-        // rdmask as 0 in beginning. Suppose, we are placing
-        // queen at 1st column index at 0th row. rowmask,
-        // ldmask and rdmask will change for next row as
-        // below:
-
-        // rowmask's 1st bit will be set by OR operation
-        // rowmask = 00000000000000000000000000000010
-
-        // ldmask will change by setting 1st
-        // bit by OR operation  and left shifting
-        // by 1 as it has to block the next column
-        // of next row because that will fall on left
-        // diagonal. ldmask =
-        // 00000000000000000000000000000100
-
-        // rdmask will change by setting 1st bit
-        // by OR operation and right shifting by 1
-        // as it has to block the previous column
-        // of next row because that will fall on right
-        // diagonal. rdmask =
-        // 00000000000000000000000000000001
-
-        // these bit masks will keep updated in each
-        // iteration for next row
-        solveBoard(board, row + 1, rowmask | p,
-                   (ldmask | p) << 1, (rdmask | p) >> 1,
-                   ways);
-
-        // Reset right-most set bit to 0 so,
-        // next iteration will continue by placing the queen
-        // at another safe column index of this row
-        safe = safe & (safe - 1);
-
-        // Backtracking, replace 'Q' by ' '
-        board[row][col] = ' ';
+    
+    public:
+    vector<string> wordBreak(int n, vector<string>& dict, string s)
+    {
+        vector<string> ans;
+        
+        int size = s.length();
+        
+        if(size==0)
+            return ans;
+        
+        string sentence = "";
+        int index = 0;
+        
+        backtrack(dict, s, size, index, sentence, ans);
+        
+        return ans;
     }
-    return;
-}
+};
 
-// Driver Code
-int main()
+class Solution2
 {
-    // Board size
-    int n = 4;
-    int ways = 0;
+public:
+    unordered_map<string, vector<string>> m;
+    
+    void combine(vector<string> &v, string w)
+    {
+        for(int i = 0; i < v.size(); i++)
+            v[i] += " " + w;
+    }
+    
+    vector<string> cal(string s, unordered_set<string> &mp)
+    {
+        if(m.find(s) != m.end()) 
+            return m[s];
 
-    vector<vector<char> > board;
-    for (int i = 0; i < n; i++) {
-        vector<char> tmp;
-        for (int j = 0; j < n; j++) {
-            tmp.push_back(' ');
+        vector<string> result;
+
+        if(mp.find(s) != mp.end()) 
+            result.push_back(s);
+
+        for(int i = 1;i < s.size();i++)
+        {
+            string rem = s.substr(i);
+
+            if(mp.find(rem) != mp.end())
+            {
+                vector<string> v = cal(s.substr(0,i), mp);
+                combine(v, rem);
+                result.insert(result.end(), v.begin(), v.end());
+            }
         }
-        board.push_back(tmp);
-    }
 
-    int rowmask = 0, ldmask = 0, rdmask = 0;
-    int row = 0;
-
-    // Function Call
-    result.clear();
-    solveBoard(board, row, rowmask, ldmask, rdmask, ways);
-    sort(result.begin(),result.end());
-    for (auto ar : result) {
-        cout << "[";
-        for (auto it : ar)
-            cout << it << " ";
-        cout << "]";
+        m[s] = result;
+        return result;
     }
-    return 0;
-}
+    
+    vector<string> wordBreak(int n, vector<string>& dict, string s) 
+    {
+        unordered_set<string> mp;
+
+        for(int i = 0;i < n;i++)
+            mp.insert(dict[i]);
+            
+        vector<string> ans = cal(s, mp);
+        return ans;
+    }
+};
