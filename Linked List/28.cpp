@@ -1,5 +1,5 @@
 // Flatten A Linked List
-// https://www.codingninjas.com/codestudio/problems/flatten-a-linked-list_1112655?leftPanelTab=0
+// https://practice.geeksforgeeks.org/problems/flattening-a-linked-list/1
 
 #include<bits/stdc++.h>
 using namespace std;
@@ -8,47 +8,47 @@ class Node {
 public:
 	int data;
 	Node* next;
-	Node* child;
+	Node* bottom;
 
 	Node(int data) {
 		this->data = data;
 		this->next = NULL;
-		this->child = NULL;
+		this->bottom = NULL;
 	}
 };
 
-Node* sortedMerge( Node* a, Node* b)
+Node* merge_sorted(Node* a, Node* b)
 {
-    if (a == NULL)
-       return b;
+   Node* head = new Node(-1);
+   Node* temp = head;
+    
+   while(a != NULL && b != NULL)
+   {
+      if(a->data <= b->data)
+         {
+            temp->bottom = a;
+            a = a->bottom;
+         }
+         else
+         {
+            temp->bottom = b;
+            b = b->bottom;
+         }
+        temp = temp->bottom;
+   }
 
-    else if (b == NULL) 
-       return a;
-
-    Node* result = NULL;
-
-    if (a->data <= b->data)
-    {
-       result = a;
-       result->child = sortedMerge(a->child, b);
-    }
-    else 
-    {
-       result = b;
-       result->child = sortedMerge(a, b->child);
-    }
-
-    return result;
+   if(a != NULL)
+      temp->bottom = a;
+   else
+      temp->bottom = b;
+    
+   return head->bottom;
 }
-Node* flattenLinkedList(Node* head) 
+
+Node *flatten(Node *root)
 {
-   if(head==NULL || head->next==NULL)
-       return head;
-
-   Node* down=head;
-   Node* right=flattenLinkedList(head->next);
-   down->next=NULL;
-   Node* ans=sortedMerge(down,right);
-
-   return ans;  
+   if(root == NULL || root->next == NULL)
+      return root;
+    
+   return merge_sorted(root, flatten(root->next));
 }
