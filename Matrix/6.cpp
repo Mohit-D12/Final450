@@ -60,3 +60,48 @@ class Solution{
         return max_area;
     }
 };
+
+//fills l and r array in one pass
+class Alernate_Solution
+{
+    void fill_lr(int* arr, int n, vector<int>& l, vector<int>& r)
+    {
+        stack<int> s;
+        s.push(-1);
+        
+        for(int i = 0; i < n; i++)
+        {
+            while(s.top() >= 0 && arr[s.top()] > arr[i])
+            {
+                r[s.top()] = i;
+                s.pop();
+            }
+            
+            l[i] = s.top();
+            
+            s.push(i);
+        }
+    }
+  public:
+    int maxArea(int M[MAX][MAX], int n, int m) {
+        int hist[m] = {0};
+        int max_area = 0;
+        
+        for(int i = 0; i < n; i++)
+        {
+            vector<int> l(m, -1), r(m, m);
+            //fill hist
+            for(int j = 0; j < m; j++)
+                hist[j] = (M[i][j])? (hist[j]+1) : 0;
+            
+            //fill l and r
+            fill_lr(hist, m, l, r);
+            
+            //find areas for each elements
+            for(int j = 0; j < m; j++)
+                max_area = max(max_area, hist[j] * (r[j] - l[j] - 1));
+        }
+        
+        return max_area;
+    }
+}
