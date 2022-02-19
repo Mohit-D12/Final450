@@ -1,8 +1,5 @@
-// 104. Maximum Depth of Binary Tree
-// https://leetcode.com/problems/maximum-depth-of-binary-tree/
-
-#include<bits/stdc++.h>
-using namespace std;
+// 226. Invert Binary Tree (Mirror)
+// https://leetcode.com/problems/invert-binary-tree/
 
 struct TreeNode {
     int val;
@@ -15,11 +12,14 @@ struct TreeNode {
 
 class Solution {
 public:
-    int maxDepth(TreeNode* root) {
-        
+    TreeNode* invertTree(TreeNode* root) {
         if(!root)
-            return 0;
+            return root;
         
-        return 1 + max(maxDepth(root->left), maxDepth(root->right));
+        TreeNode* l = invertTree(root->left);
+        root->left = invertTree(root->right);
+        root->right = l;
+        
+        return root;
     }
 };

@@ -1,9 +1,8 @@
-// 102. Binary Tree Level Order Traversal
-// https://leetcode.com/problems/binary-tree-level-order-traversal/
+// 103. Binary Tree Zigzag Level Order Traversal
+// https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
 
 #include<bits/stdc++.h>
 using namespace std;
-
 
 struct TreeNode {
     int val;
@@ -16,14 +15,15 @@ struct TreeNode {
 
 class Solution {
 public:
-    vector<vector<int>> levelOrder(TreeNode* root) {
-        
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
         if(root==NULL)
             return {};
 
         queue<TreeNode*> q;
         vector<vector<int>> ans;
         q.push(root);
+        
+        bool flag = false;
 
         while(q.size()) {
 
@@ -42,7 +42,9 @@ public:
                 if(front->right)
                     q.push(front->right);
             }
-
+            if(flag)
+                reverse(temp.begin(), temp.end());
+            flag = !flag;
             ans.push_back(temp);
         }
         

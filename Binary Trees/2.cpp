@@ -1,43 +1,57 @@
-// Level order traversal
-// https://practice.geeksforgeeks.org/problems/level-order-traversal/1
+// Reverse Level order traversal
+// 107. Binary Tree Level Order Traversal II
+// https://leetcode.com/problems/binary-tree-level-order-traversal-ii/
 
 #include<bits/stdc++.h>
 using namespace std;
 
-struct Node
-{
-    int data;
-    struct Node* left;
-    struct Node* right;
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-class Solution
-{
-    vector<int> reverseLevelOrder(Node *node)
-    {
-        // code here
-        vector<int> result;
-            
-        if(node == NULL)
-            return result;
-            
-        struct Node* temp = node;
-        queue<Node*> nodes;
-        nodes.push(node);
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
         
-        while(!nodes.empty())
+        if(root == NULL)
+            return {};
+
+        vector<vector<int>> result;
+        queue<TreeNode*> q;
+        
+        TreeNode* node;
+        int count;
+        
+        q.push(root);
+        while(q.size())
         {
-            temp = nodes.front();
-            nodes.pop();
-            result.push_back(temp->data);
+            count = q.size();
+            if(count == 0)
+                break;
             
-            if(temp->right != NULL)
-                nodes.push(temp->right);
-            if(temp->left != NULL)
-                nodes.push(temp->left);
+            vector<int> level;
+            while(count--)
+            {
+                node = q.front();
+                q.pop();
+                
+                level.push_back(node->val);
+                
+                if(node->left)
+                    q.push(node->left);
+                if(node->right)
+                    q.push(node->right);
+            }
+            result.push_back(level);
         }
         
         reverse(result.begin(), result.end());
         return result;
+        
     }
 };

@@ -1,32 +1,38 @@
+// 543. Diameter of Binary Tree
+// https://leetcode.com/problems/diameter-of-binary-tree/
+
 #include<bits/stdc++.h>
 using namespace std;
 
-class Node
-{
-  public:
-    int data;
-    Node* left;
-    Node* right;
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
 class Solution {
-    int find_diameter(struct Node* node, int& d)
-    {
-        if(node == NULL)
+    
+    int set_diameter(TreeNode* root, int& diameter) {
+        
+        if(root == NULL)
             return 0;
         
-        int left = find_diameter(node->left, d);
-        int right = find_diameter(node->right, d);
+        int left = set_diameter(root->left, diameter);
+        int right = set_diameter(root->right, diameter);
         
-        d = max(d, left + right + 1);
+        diameter = max(diameter, left + right);
         
         return 1 + max(left, right);
     }
     
-  public:
-    int diameter(Node* root) {
-        int d = 0;
-        find_diameter(root, d);
-        return d;
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        
+        int diameter = 0;
+        set_diameter(root, diameter);
+        return diameter;
     }
 };
