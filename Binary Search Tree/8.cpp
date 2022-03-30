@@ -40,12 +40,3 @@ public:
         return construct_bst(preorder, INT_MAX);
     }
 };
-
-
-
-
-
-
-
-
-
