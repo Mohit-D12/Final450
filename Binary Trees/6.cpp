@@ -4,29 +4,37 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
+struct Node {
 
-class Solution {
-    void inorder(TreeNode* root, vector<int>& res)
-    {
-        if(!root)
-            return;
-        inorder(root->left, res);
-        res.push_back(root->val);
-        inorder(root->right, res);
-    }
-        
-public:
-    vector<int> inorderTraversal(TreeNode* root) {
-        vector<int> nodes;
-        inorder(root, nodes);
-        return nodes;
+    int data;
+    Node *left, *right;
+ 
+    Node(int data) {
+
+        this->data = data;
+        this->left = this->right = nullptr;
     }
 };
+ 
+void inorderIterative(Node* root) {
+    
+    stack<Node*> stack;
+    Node* curr = root;
+ 
+    while (!stack.empty() || curr != nullptr) {
+
+        if (curr != nullptr) {
+
+            stack.push(curr);
+            curr = curr->left;
+        }
+        else {
+
+            curr = stack.top();
+            stack.pop();
+            cout << curr->data << " ";
+ 
+            curr = curr->right;
+        }
+    }
+}
