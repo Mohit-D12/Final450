@@ -23,25 +23,22 @@ class Solution
     public:
     struct node *reverse (struct node *head, int k)
     { 
-        // Complete this method
-        struct node* curr = head;
-        struct node* prev = NULL, *next = NULL;
+        if(!head)
+            return NULL;
         
         int count = 0;
-        while(count < k && curr != NULL)
-        {
+        node* curr = head, *prev = NULL, *next = NULL;
+        
+        while(count++ < k && curr) {
+            
             next = curr->next;
             curr->next = prev;
             
             prev = curr;
             curr = next;
-            
-            count++;
         }
         
-        if(curr != NULL)
-            head->next = reverse(curr, k);
-        
+        head->next = reverse(curr, k);
         return prev;
     }
 };
