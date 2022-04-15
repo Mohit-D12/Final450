@@ -21,7 +21,35 @@ struct Node
     }
 };
 
-class Solution{
+class Solution_Space_O_N {
+    
+    bool isPallindromeHelper(Node* curr, Node*& head) {
+        
+        if(!curr)
+            return true;
+        
+        if(!isPallindromeHelper(curr->next, head))
+            return false;
+        
+        
+        bool result =  curr->data == head->data;
+        head = head->next;
+        return result;
+    }
+    
+  public:
+    //Function to check whether the list is palindrome.
+    bool isPalindrome(Node *head)
+    {
+        //Your code here
+        if(!head)
+            return true;
+            
+        return isPallindromeHelper(head, head);
+    }
+};
+
+class Solution_constant_space{
     
     Node* find_middle(Node* head)
     {
